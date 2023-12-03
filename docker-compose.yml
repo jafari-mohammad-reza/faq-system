@@ -1,2 +1,42 @@
 version: '3.8'
 services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: Dev
+    volumes:
+      - ./:/app/
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    environment:
+      PORT: 5000
+      MYSQL_CONNECTION_URL: mysql://root:root@mysql:3306/faq-system
+      MYSQL_HOST: mysql
+    depends_on:
+      - mysql
+    restart: always
+    networks:
+      app_network:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: on-failure
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: faq-system
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_GRANT_PRIVILEGES: 'Y'
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      app_network:
+volumes:
+  mysql_data:
+networks:
+  app_network:
