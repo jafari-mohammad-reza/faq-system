@@ -14,7 +14,3 @@ export function connectDb() {
 export function getDb(){
     return db
 }
-
-export function initSeed(){
-
-}
