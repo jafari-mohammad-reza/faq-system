@@ -3,9 +3,6 @@ import express from "express";
 import {initSwagger} from "./share/config/swagger-conf.js";
 import {initMiddlewares} from "./share/config/middlewares-conf.js";
 import {connectDb} from "./share/db/db.js";
-import {seed} from "./share/db/seed.js";
-import path from "path";
-import fs from "fs";
 const nodeEnv =process.env.NODE_ENV
 config({
     debug: nodeEnv === "dev",
