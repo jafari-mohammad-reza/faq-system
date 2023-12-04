@@ -8,8 +8,9 @@ export function connectDb() {
         uri :process.env.MYSQL_CONNECTION_URL,
         multipleStatements: true,
     })
-    db.on("connect" , async () => {
-        await createTables(db)
+    db.on("connect" ,  () => {
+         createTables(db)
+        seedData(db)
         console.log(`Database connected.`)
     })
     db.on("error" , error => {
@@ -21,10 +22,17 @@ export function getDb(){
     return db
 }
 
-async function createTables(db){
+function createTables(db){
     const createTablesQuery = fs.readFileSync(path.join("src/share/db/queries/create-tables.sql"), "utf-8");
-    db.query(createTablesQuery, function (err, results) {
+    db.query(createTablesQuery, function (err) {
         if (err) throw err;
         console.log("Tables created successfully.")
+    });
+}
+function seedData(db){
+    const seedQuery = fs.readFileSync(path.join("src/share/db/queries/seed.sql"), "utf-8");
+    db.query(seedQuery, function (err) {
+        if (err) throw err;
+        console.log("Data seeded successfully.")
     });
 }
