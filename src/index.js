@@ -4,6 +4,7 @@ import {initSwagger} from "./share/config/swagger-conf.js";
 import {initMiddlewares} from "./share/config/middlewares-conf.js";
 import {connectDb} from "./share/db/db.js";
 import {BaseRepository} from "./share/db/base.repository.js";
+import mainRouter from "./modules/modules.router.js";
 const nodeEnv =process.env.NODE_ENV
 config({
     debug: nodeEnv === "dev",
@@ -13,8 +14,9 @@ async function initServer() {
     const app = express()
     connectDb()
     app.disable('x-powered-by');
-    initMiddlewares(app)
+    app.use(mainRouter)
     initSwagger(app,port)
+    initMiddlewares(app)
     app.listen( port,()=> {
         console.log(`Running on ${port}`)
     })
