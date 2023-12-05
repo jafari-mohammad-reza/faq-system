@@ -1,4 +1,5 @@
 import Joi from "joi"
+
 const userNameValidator = Joi.string()
     .required()
     .min(3)
@@ -17,9 +18,9 @@ const userNameValidator = Joi.string()
 const passwordValidator = Joi.string()
     .required()
     .messages({
-    'any.required': 'password cannot be empty',
+        'any.required': 'password cannot be empty',
     });
 export const usernamePasswordValidator = Joi.object({
-    username:userNameValidator,
+    username: userNameValidator,
     password: passwordValidator,
 });

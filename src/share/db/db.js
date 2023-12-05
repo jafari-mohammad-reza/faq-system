@@ -2,6 +2,7 @@ import mysql from "mysql2"
 import fs from "fs";
 import path from "path";
 import {MYSQL_CONNECTION_URL} from "../constants/index.js";
+
 let db;
 
 export async function connectDb() {
@@ -25,18 +26,19 @@ export async function connectDb() {
     });
 }
 
-export function getDb(){
+export function getDb() {
     return db
 }
 
-function createTables(db){
+function createTables(db) {
     const createTablesQuery = fs.readFileSync(path.join("src/share/db/queries/create-tables.sql"), "utf-8");
     db.query(createTablesQuery, function (err) {
         if (err) throw err;
         console.log("Tables created successfully.")
     });
 }
-function seedData(db){
+
+function seedData(db) {
     const seedQuery = fs.readFileSync(path.join("src/share/db/queries/seed.sql"), "utf-8");
     db.query(seedQuery, function (err) {
         if (err) throw err;

@@ -1,7 +1,7 @@
 import createHttpError from "http-errors";
 import statusCodes from "http-status-codes";
 
-export function errorHandlingMiddleware(error,req,res,_nex){
+export function errorHandlingMiddleware(error, req, res, _nex) {
     if (error.isJoi) {
         return res.status(400).json({
             status: 400,
@@ -21,6 +21,7 @@ export function errorHandlingMiddleware(error,req,res,_nex){
         message
     });
 }
-export function notFoundMiddleware(req,re,next){
+
+export function notFoundMiddleware(req, re, next) {
     next(createHttpError(statusCodes.NOT_FOUND));
 }
