@@ -16,15 +16,8 @@ const userNameValidator = Joi.string()
     });
 const passwordValidator = Joi.string()
     .required()
-    .min(8)
-    .max(16)
-    .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)
     .messages({
-        'any.required': 'password cannot be empty',
-        'string.max': 'password must be between 8 to 16 characters',
-        'string.min': 'password must be between 8 to 16 characters',
-        'string.pattern': 'password must contains at least on uppercase and lowercase character and one number.',
-        'string.equal': 'confirmPassword must be exactly equal to password',
+    'any.required': 'password cannot be empty',
     });
 export const usernamePasswordValidator = Joi.object({
     username:userNameValidator,

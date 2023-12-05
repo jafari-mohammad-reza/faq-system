@@ -4,19 +4,25 @@ import path from "path";
 import {MYSQL_CONNECTION_URL} from "../constants/index.js";
 let db;
 
-export function connectDb() {
-    db = mysql.createConnection({
-        uri :MYSQL_CONNECTION_URL,
-        multipleStatements: true,
-    })
-    db.on("connect" ,  () => {
-         createTables(db)
-        seedData(db)
-        console.log(`Database connected.`)
-    })
-    db.on("error" , error => {
-        console.error(`Database failed to connect ${error}`)
-    })
+export async function connectDb() {
+    return new Promise((resolve, reject) => {
+        db = mysql.createConnection({
+            uri: MYSQL_CONNECTION_URL,
+            multipleStatements: true,
+        });
+
+        db.on("connect", () => {
+            createTables(db);
+            seedData(db);
+            console.log(`Database connected.`);
+            resolve(db);
+        });
+
+        db.on("error", error => {
+            console.error(`Database failed to connect: ${error}`);
+            reject(error);
+        });
+    });
 }
 
 export function getDb(){

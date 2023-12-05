@@ -1,17 +1,22 @@
 import {getDb} from "./db.js";
+import autoBind from "auto-bind";
 
 export class BaseRepository {
-    #db
     #table
+
     constructor(table) {
-        this.#db = getDb()
-        this.#table = table
+        autoBind(this)
+        this.#table = table;
     }
+
+
+
+
     async findAll() {
         try {
+            const db = getDb()
             const query = `SELECT * FROM ${this.#table}`;
-            const [rows] = await this.#db.promise().query(query);
-            console.log(rows);
+            const [rows] = await db.promise().query(query);
             return rows;
         } catch (err) {
             console.error(err);
@@ -20,10 +25,10 @@ export class BaseRepository {
     }
     async findOneById(id) {
         try {
+            const db = getDb()
             const query = `SELECT * FROM ${this.#table} WHERE id = ?`;
-            const [rows] = await this.#db.promise().query(query, [id]);
-            console.log(rows);
-            return rows;
+            const [rows] = await db.promise().query(query, [id]);
+            return rows[0];
         } catch (err) {
             console.error(err);
             throw err;
@@ -32,10 +37,10 @@ export class BaseRepository {
 
     async findOneBy(column, value) {
         try {
+            const db = getDb()
             const query = `SELECT * FROM ${this.#table} WHERE ${column} = ?`;
-            const [rows] = await this.#db.promise().query(query, [value]); // pass value here to prevent sql injection.
-            console.log(rows);
-            return rows;
+            const [rows] = await db.promise().query(query, [value]); // pass value here to prevent sql injection.
+            return rows[0];
         } catch (err) {
             console.error(err);
             throw err;
@@ -43,12 +48,14 @@ export class BaseRepository {
     }
     async create(input) {
         try {
+            const db = getDb()
             const columns = Object.keys(input).join(', ');
             const placeholders = Object.keys(input).map(() => '?').join(', ');
             const values = Object.values(input);
-
+            console.log("values" , values)
+            console.log("placeholders" , placeholders)
             const query = `INSERT INTO ${this.#table} (${columns}) VALUES (${placeholders})`;
-            const [result] = await this.#db.promise().query(query, values);
+            const [result] = await db.promise().query(query, values);
             console.log(result);
             return result;
         } catch (err) {
@@ -59,11 +66,12 @@ export class BaseRepository {
 
     async update(id, input) {
         try {
+            const db = getDb()
             const updates = Object.keys(input).map(key => `${key} = ?`).join(', ');
             const values = [...Object.values(input), id];
 
             const query = `UPDATE ${this.#table} SET ${updates} WHERE id = ?`;
-            const [result] = await this.#db.promise().query(query, values);
+            const [result] = await db.promise().query(query, values);
             console.log(result);
             return result;
         } catch (err) {
@@ -74,8 +82,9 @@ export class BaseRepository {
 
     async delete(id) {
         try {
+            const db = getDb()
             const query = `DELETE FROM ${this.#table} WHERE id = ?`;
-            const [result] = await this.#db.promise().query(query, [id]);
+            const [result] = await db.promise().query(query, [id]);
             console.log(result);
             return result;
         } catch (err) {
@@ -85,6 +94,7 @@ export class BaseRepository {
     }
 
     async query(query){
-        await this.#db.promise().query(query);
+        const db = getDb()
+        await db.promise().query(query);
     }
 }

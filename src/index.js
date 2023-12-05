@@ -16,7 +16,7 @@ config({
 async function initServer() {
     const port = PORT
     const app = express()
-    connectDb()
+    await connectDb()
     app.disable('x-powered-by');
     initMiddlewares(app)
     app.use(mainRouter)
