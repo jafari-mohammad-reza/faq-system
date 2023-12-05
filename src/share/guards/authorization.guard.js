@@ -4,6 +4,7 @@ import {decodeToken} from "../utils/jwt.utils.js";
 import {BaseRepository} from "../db/base.repository.js";
 
 const userRepo = new BaseRepository("User")
+const userRoleRepo = new BaseRepository("UserRole")
 
 export async function AuthorizationGuard(req, res, next) {
     try {
@@ -23,7 +24,11 @@ export async function AuthorizationGuard(req, res, next) {
         if (!user) {
             throw createHttpError(statusCodes.UNAUTHORIZED)
         }
-        req.user = user.ID
+        const userRoles = await userRoleRepo.findAllBy("UserId", user.ID);
+        req.user = {
+            id : user.ID,
+            roles:userRoles
+        }
         next()
     } catch (err) {
         next(err)
