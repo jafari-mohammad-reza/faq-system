@@ -1,11 +1,12 @@
 import mysql from "mysql2"
 import fs from "fs";
 import path from "path";
+import {MYSQL_CONNECTION_URL} from "../constants/index.js";
 let db;
 
 export function connectDb() {
     db = mysql.createConnection({
-        uri :process.env.MYSQL_CONNECTION_URL,
+        uri :MYSQL_CONNECTION_URL,
         multipleStatements: true,
     })
     db.on("connect" ,  () => {

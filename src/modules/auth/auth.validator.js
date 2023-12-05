@@ -1,6 +1,6 @@
 import Joi from "joi"
 const userNameValidator = Joi.string()
-    .empty()
+    .required()
     .min(3)
     .max(12)
     .messages({
