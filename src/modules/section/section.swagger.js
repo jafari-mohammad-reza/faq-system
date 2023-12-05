@@ -39,13 +39,21 @@
  *
  * /section/{id}:
  *  get:
- *      summary: get section and its topics and count of questions and answers
+ *      summary: Get section and its topics and count of questions and answers
  *      tags:
  *          - Section
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          schema:
+ *            type: integer
+ *          description: The ID of the section to retrieve
  *      responses:
  *          200:
- *              description: success
+ *              description: Success
  */
+
 
 
 
@@ -54,7 +62,7 @@
  *
  * /section/:
  *  post:
- *      summary: create new section
+ *      summary: Create new section
  *      tags:
  *          - Section
  *      requestBody:
@@ -65,41 +73,54 @@
  *                      type: object
  *                      required:
  *                          - name
+ *                          - status
  *                      properties:
  *                          name:
  *                              type: string
- *                              description: name of topic
+ *                              description: Title of topic
+ *                          status:
+ *                              type: string
+ *                              enum: [Draft, Published]
+ *                              description: Status of topic
  *      responses:
  *          200:
- *              description: success
+ *              description: Success
  */
-
-
 
 /**
  * @swagger
  *
  * /section/{id}:
  *  patch:
- *      summary: update section
+ *      summary: Update section
  *      tags:
  *          - Section
- *      requestBody:
+ *      parameters:
+ *        - in: path
+ *          name: id
  *          required: true
+ *          schema:
+ *            type: integer
+ *          description: The ID of the section to retrieve
+ *      requestBody:
+ *          required: false
  *          content:
  *              application/x-www-form-urlencoded:
  *                 schema:
  *                      type: object
- *                      required:
- *                          - name
  *                      properties:
  *                          name:
  *                              type: string
- *                              description: name of topic
+ *                              description: Title of topic
+ *                          status:
+ *                              type: string
+ *                              enum: [Draft, Published]
+ *                              description: Status of topic (optional for update)
  *      responses:
  *          200:
- *              description: success
+ *              description: Success
  */
+
 
 /**
  * @swagger
@@ -109,6 +130,13 @@
  *      summary: delete section and its topics and count of questions and answers
  *      tags:
  *          - Section
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          schema:
+ *            type: integer
+ *          description: The ID of the section to retrieve
  *      responses:
  *          200:
  *              description: success

@@ -5,6 +5,7 @@ import {BaseRepository} from "../db/base.repository.js";
 
 const userRepo = new BaseRepository("User")
 const userRoleRepo = new BaseRepository("UserRole")
+const roleRepo = new BaseRepository("Role")
 
 export async function AuthorizationGuard(req, res, next) {
     try {
@@ -25,9 +26,10 @@ export async function AuthorizationGuard(req, res, next) {
             throw createHttpError(statusCodes.UNAUTHORIZED)
         }
         const userRoles = await userRoleRepo.findAllBy("UserId", user.ID);
+        const userRolesTitle = await roleRepo.findAllByIds(userRoles.map(role => Number(role.RoleID)))
         req.user = {
             id : user.ID,
-            roles:userRoles
+            roles: userRolesTitle ? userRolesTitle.map(item => item.Title): []
         }
         next()
     } catch (err) {

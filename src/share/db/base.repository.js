@@ -9,15 +9,14 @@ export class BaseRepository {
         this.#table = table;
     }
 
-    async findAll() {
+    async findAll(filter= undefined) {
         try {
             const db = getDb()
             const query = `SELECT *
-                           FROM ${this.#table}`;
+                           FROM ${this.#table} ${filter && `WHERE ${filter}`}`;
             const [rows] = await db.promise().query(query);
             return rows;
         } catch (err) {
-            console.error(err);
             throw err;
         }
     }
@@ -28,10 +27,9 @@ export class BaseRepository {
             const query = `SELECT *
                            FROM ${this.#table}
                            WHERE id IN (?)`;
-            const [rows] = await db.promise().query(query, ids);
+            const [rows] = await db.promise().query(query, [ids]);
             return rows;
         } catch (err) {
-            console.error(err);
             throw err;
         }
     }
@@ -45,7 +43,6 @@ export class BaseRepository {
             const [rows] = await db.promise().query(query, [values]);
             return rows;
         } catch (err) {
-            console.error(err);
             throw err;
         }
     }
@@ -59,7 +56,6 @@ export class BaseRepository {
             const [rows] = await db.promise().query(query, [id]);
             return rows[0];
         } catch (err) {
-            console.error(err);
             throw err;
         }
     }
@@ -73,7 +69,6 @@ export class BaseRepository {
             const [rows] = await db.promise().query(query, [value]); // pass value here to prevent sql injection.
             return rows[0];
         } catch (err) {
-            console.error(err);
             throw err;
         }
     }
@@ -84,15 +79,11 @@ export class BaseRepository {
             const columns = Object.keys(input).join(', ');
             const placeholders = Object.keys(input).map(() => '?').join(', ');
             const values = Object.values(input);
-            console.log("values", values)
-            console.log("placeholders", placeholders)
             const query = `INSERT INTO ${this.#table} (${columns})
                            VALUES (${placeholders})`;
             const [result] = await db.promise().query(query, values);
-            console.log(result);
             return result;
         } catch (err) {
-            console.error(err);
             throw err;
         }
     }
@@ -107,10 +98,8 @@ export class BaseRepository {
                            SET ${updates}
                            WHERE id = ?`;
             const [result] = await db.promise().query(query, values);
-            console.log(result);
             return result;
         } catch (err) {
-            console.error(err);
             throw err;
         }
     }
@@ -122,10 +111,8 @@ export class BaseRepository {
                            FROM ${this.#table}
                            WHERE id = ?`;
             const [result] = await db.promise().query(query, [id]);
-            console.log(result);
             return result;
         } catch (err) {
-            console.error(err);
             throw err;
         }
     }
